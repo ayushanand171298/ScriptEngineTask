@@ -24,6 +24,33 @@
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
     </properties>
 
+    <!-- SINGLE merged repositories block -->
+    <repositories>
+        <repository>
+            <id>java.net-maven2</id>
+            <url>https://maven.java.net/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>atlassian-public</id>
+            <url>https://packages.atlassian.com/maven/public</url>
+        </repository>
+        <repository>
+            <id>atlassian-3rd-party</id>
+            <url>https://packages.atlassian.com/maven/repository/thirdparty</url>
+        </repository>
+        <repository>
+            <id>atlassian-m2-repository</id>
+            <url>https://packages.atlassian.com/maven/repository/maven-2</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>atlassian-public</id>
+            <url>https://packages.atlassian.com/maven/public</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <dependencies>
         <dependency>
             <groupId>com.atlassian.bamboo</groupId>
@@ -31,7 +58,7 @@
             <version>${bamboo.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -57,6 +84,11 @@
             <artifactId>gson</artifactId>
             <version>2.2.2-atlassian-1</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>31.1-jre</version> <!-- or match the version you need -->
+    </dependency>
     </dependencies>
 
     <build>
@@ -71,63 +103,81 @@
                     <productDataVersion>${bamboo.data.version}</productDataVersion>
                 </configuration>
             </plugin>
-          
+
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version> <!-- added version -->
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                        <relocations>
+                            <!-- Optional: relocate packages if needed to avoid conflicts -->
+                        </relocations>
+                    </configuration>
+                </execution>
+                </executions>
+            </plugin>
         </plugins>
+
         <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									com.atlassian.maven.plugins
-        								</groupId>
-        								<artifactId>
-        									maven-bamboo-plugin
-        								</artifactId>
-        								<versionRange>
-        									[5.1.18,)
-        								</versionRange>
-        								<goals>
-        									<goal>
-        										compress-resources
-        									</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.atlassian.maven.plugins</groupId>
+                                        <artifactId>maven-bamboo-plugin</artifactId>
+                                        <versionRange>[5.1.18,)</versionRange>
+                                        <goals>
+                                            <goal>compress-resources</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
         </pluginManagement>
     </build>
+
     <artifactId>ScriptEngine</artifactId>
     <url>https://github.com/prestongilchrist/ScriptEngineTask</url>
+
     <scm>
-    	<connection>scm:git:https://github.com/prestongilchrist/ScriptEngineTask.git</connection>
-    	<url>https://github.com/prestongilchrist/ScriptEngineTask.git</url>
-    	<developerConnection>scm:git:https://github.com/prestongilchrist/ScriptEngineTask.git</developerConnection>
-    	<tag>HEAD</tag>
+        <connection>scm:git:https://github.com/prestongilchrist/ScriptEngineTask.git</connection>
+        <url>https://github.com/prestongilchrist/ScriptEngineTask.git</url>
+        <developerConnection>scm:git:https://github.com/prestongilchrist/ScriptEngineTask.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
+
     <issueManagement>
-    	<url>https://github.com/prestongilchrist/ScriptEngineTask/issues</url>
-    	<system>GitHub</system>
+        <url>https://github.com/prestongilchrist/ScriptEngineTask/issues</url>
+        <system>GitHub</system>
     </issueManagement>
+
 </project>
