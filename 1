@@ -89,13 +89,7 @@
             <artifactId>guava</artifactId>
             <version>31.1-jre</version> <!-- or match the version you need -->
     </dependency>
-    <dependency>
-    <groupId>org.openjdk.nashorn</groupId>
-    <artifactId>nashorn-core</artifactId>
-    <version>15.4</version> <!-- latest stable -->
-</dependency>
- 
- </dependencies>
+    </dependencies>
 
     <build>
         <plugins>
@@ -115,12 +109,12 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version> <!-- added version -->
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
 
-            <!-- <plugin>
+            <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
     <version>3.4.1</version>
@@ -132,16 +126,6 @@
             </goals>
             <configuration>
                 <createDependencyReducedPom>false</createDependencyReducedPom>
-
-                <Relocate Guava to avoid conflicts with Bamboo>
-                <relocations>
-                    <relocation>
-                        <pattern>com.google.common</pattern>
-                        <shadedPattern>shaded.com.google.common</shadedPattern>
-                    </relocation>
-                </relocations>
-
-                <Optional: exclude META-INF signatures>
                 <filters>
                     <filter>
                         <artifact>*:*</artifact>
@@ -152,58 +136,10 @@
                         </excludes>
                     </filter>
                 </filters>
-            </configuration>
-        </execution>
-    </executions>
-</plugin> -->
-     
-   <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-shade-plugin</artifactId>
-    <version>3.4.1</version>
-    <executions>
-        <execution>
-            <phase>package</phase>
-            <goals>
-                <goal>shade</goal>
-            </goals>
-            <configuration>
-                <createDependencyReducedPom>false</createDependencyReducedPom>
-
-                <!-- Relocate both Guava and Nashorn to avoid OSGi conflicts -->
-                <relocations>
-                    <relocation>
-                        <pattern>com.google.common</pattern>
-                        <shadedPattern>shaded.com.google.common</shadedPattern>
-                    </relocation>
-                    <relocation>
-                        <pattern>org.openjdk.nashorn</pattern>
-                        <shadedPattern>shaded.jdk.nashorn</shadedPattern>
-                    </relocation>
-                </relocations>
-
-                <!-- Include Nashorn explicitly -->
-                
-    <artifactSet>
-        <includes>
-            <include>org.openjdk.nashorn:nashorn-core</include>
-        </includes>
-    </artifactSet>
-                
-                <filters>
-                    <filter>
-                        <artifact>*:*</artifact>
-                        <excludes>
-                            <exclude>META-INF/*.SF</exclude>
-                            <exclude>META-INF/*.DSA</exclude>
-                            <exclude>META-INF/*.RSA</exclude>
-                        </excludes>
-                    </filter>
-                </filters>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
+                   </configuration>
+                   </execution>
+              </executions>
+           </plugin>
 
 
         </plugins>

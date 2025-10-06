@@ -44,6 +44,8 @@ import com.atlassian.bamboo.v2.build.agent.capability.CapabilityContext;
 import com.atlassian.bamboo.v2.build.agent.capability.CapabilityDefaultsHelper;
 import com.atlassian.bamboo.variable.CustomVariableContext;
 import com.atlassian.sal.api.transaction.TransactionTemplate;
+import javax.script.*;
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 abstract public class ScriptEngineCore
 {
@@ -244,8 +246,25 @@ abstract public class ScriptEngineCore
 
 	protected void executeScript(String script, String scriptLanguage, ScriptContext scriptContext, boolean isFile) throws FileNotFoundException, ScriptException
 	{
-		ScriptEngineManager factory = new ScriptEngineManager();
-		ScriptEngine engine = factory.getEngineByName(scriptLanguage);
+		 ScriptEngineManager factory = new ScriptEngineManager();
+		 factory.registerEngineName("nashorn",new NashornScriptEngineFactory());
+		 ScriptEngine engine = factory.getEngineByName("nashorn");
+
+		// ScriptEngine engine = null;
+
+		// // Handle JavaScript explicitly for Java 21+
+		// if ("js".equalsIgnoreCase(scriptLanguage) || "javascript".equalsIgnoreCase(scriptLanguage)) {
+		// 	engine = new NashornScriptEngineFactory().getScriptEngine();
+		// } else {
+		// 	ScriptEngineManager manager = new ScriptEngineManager();
+		// 	engine = manager.getEngineByName(scriptLanguage);
+		// }
+		
+		if (engine == null) {
+			engine = factory.getEngineByName("Javascript");
+		}
+
+
 		if (engine == null)
 		{
 			throw new ScriptException("Script engine " + scriptLanguage + " not found.");
